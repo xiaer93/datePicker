@@ -1,7 +1,7 @@
 # jq插件之日期选择器
 
 ## 在线体验插件
-[]()
+[在线体验](http://clovey.party/datePicker/build/index.html)
 
 ## 细节
 1. date-theme，标签属性，做theme！
