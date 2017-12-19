@@ -1,0 +1,171 @@
+/*遮罩层*/
+.calendar_xr_wrapper{
+    position: fixed;
+    z-index: -1;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color: #ffffff;
+    opacity: 0.4;
+}
+
+.calendar_xr{
+    position: absolute;
+    z-index: 1000;
+    left:0;
+    right: 0;
+    width: 200px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+}
+/*日历UI的card样式*/
+.calendar_xr_card{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    flex:0 0 auto;
+    text-align: center;
+    font-size: 2em;
+    background: radial-gradient(whitesmoke 3%, #1691ff 100%);
+}
+.calendar_xr_card_year,.calendar_xr_card_month,.calendar_xr_card_day{
+    display: inline-block;
+    margin: 0 5px;
+    height: 36px;
+    line-height: 35px;
+}
+/*控制面板*/
+.calendar_xr_panel{
+    flex:0 0 auto;
+    width:100%;
+    height: 30px;
+    font-size: 1.8em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.calendar_xr_panel>span{
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+/*日历*/
+.calendar_xr_date{
+    position: relative;
+    width: 100%;
+    flex: 1 1 auto;
+    text-align: center;
+    font-size: 1.3em;
+    overflow: hidden;
+}
+.calendar_xr_date_thead{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-content: space-between;
+}
+.calendar_xr_date_thead>span{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.calendar_xr_date_tbody{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width:100%;
+    height:calc(100% - 30px);
+}
+.calendar_xr_date_tbody>span>span{
+    cursor: pointer;
+}
+.calendar_xr_date_tbody>span{
+    display: flex;
+    justify-content: space-around;
+}
+.calendar_xr_date_tbody_date{
+    display: block;
+    flex:1;
+    box-sizing: border-box;
+    border: 1px solid transparent;/*避免鼠标划过时变动*/
+}
+.calendar_xr_date_tbody_date:hover{
+    border: 1px solid red;
+}
+.calendar_xr_date_tbody_date.pdate{
+    color: #ded2d2;
+}
+.calendar_xr_date_tbody_date.ndate{
+    color: #ded2d2;
+}
+.calendar_xr_date_tbody_date.cdate{
+    color: #000;
+}
+
+/*tbody动画*/
+.calendar_xr_date_tbody{
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+/*左右滑动动画*/
+.calendar_xr_date_tbody{
+    left:0;
+    opacity:1;
+}
+.calendar_xr_transition_left{
+    left:-200px;
+    opacity: 0.3;
+}
+.calendar_xr_transition_right{
+    left:200px;
+    opacity: 0.3;
+}
+/*缩放动画*/
+.calendar_xr_date_tbody{
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+}
+.calendar_xr_transition_max{
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+    opacity: 0.3;
+}
+.calendar_xr_transition_min{
+    -webkit-transform: scale(0.9);
+    -moz-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    -o-transform: scale(0.9);
+    transform: scale(0.9);
+    opacity:0.3;
+}
+
+
+
+/*选中后的样式*/
+.calendar_xr_date_tbody_date.selected{
+    box-sizing: border-box;
+    border:1px solid yellow;
+}
+/*主题*/
+.calendar_xr[data-theme="blue"] {
+    background-color: #1565c0;
+}
+.calendar_xr[data-theme="red"]{
+     background-color: red;
+ }

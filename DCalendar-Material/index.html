@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日期选择器</title>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="./dcalendar.picker.css">
+    <script type="text/javascript" src="./dcalendar.picker.js"></script>
+
+
+    <script>
+        $(document).ready(function ($) {
+            $("#datapicker").dcalendarpicker({format: 'mm-dd-yy'});
+        });
+
+    </script>
+
+</head>
+<body>
+<input type="text" id="datapicker" value="">
+
+
+</body>
+</html>

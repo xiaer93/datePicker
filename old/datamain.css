@@ -1,0 +1,55 @@
+#dateSelect{
+    box-sizing: border-box;
+    text-align: center;
+    width: 300px;
+    height: 300px;
+    border: 1px solid #ddd;
+}
+#dateSelect>div{
+    position: relative;
+    background: crimson;
+    color: #fff;
+}
+#dateSelect>div h2{
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+}
+#dateSelect>div span{
+    position: absolute;
+    top:0;
+    line-height: 30px;
+    cursor: pointer;
+}
+#dateSelect>div span:nth-child(2){
+    left: 10px;
+}
+#dateSelect>div span:nth-child(3){
+    right: 10px;
+}
+#dateSelect table{
+    width: 100%;
+    height: calc(100% - 30px);
+    border-spacing: 0;
+}
+#dateSelect th{
+    font-weight: bold;
+    padding: 6px 0;
+}
+#dateSelect td{
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+.thisMonth{
+    color: #000;
+}
+.NotMonth{
+    color: #aaa;
+}
+.selectDay{
+    background: red;
+    color: #ffffff;
+}
+.oriDay{
+    border: 1px solid black !important;
+}
