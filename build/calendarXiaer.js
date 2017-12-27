@@ -259,7 +259,7 @@
         * */
         clickBY:function (event,callback) {
 
-            //对单击元素进行判断
+            //对状态进行判断
             if(this.modeView==="year"){
                 var year=parseInt($(event.target).text());
                 this.current.setFullYear(year);
