@@ -3,6 +3,10 @@
 ## 在线体验插件
 [在线体验](http://clovey.party/datePicker/build/index.html)
 
+## 功能
+1. 支持年月日三种视图切换！
+2. 日历切换时带有动画效果！
+
 ## 细节
 1. date-theme，标签属性，做theme！
 2. jq的data函数，通过DCAL保存对应的Dcalendar对象！

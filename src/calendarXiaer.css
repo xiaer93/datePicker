@@ -79,25 +79,31 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     width:100%;
     height:calc(100% - 30px);
 }
-.calendar_xr_date_tbody>span>span{
-    cursor: pointer;
-}
 .calendar_xr_date_tbody>span{
     display: flex;
+    flex:1;
     justify-content: space-around;
 }
-.calendar_xr_date_tbody_date{
-    display: block;
-    flex:1;
+.calendar_xr_date_tbody>span>span{
+    display: flex;
     box-sizing: border-box;
+    flex: 1;
+    cursor: pointer;
     border: 1px solid transparent;/*避免鼠标划过时变动*/
 }
-.calendar_xr_date_tbody_date:hover{
-    border: 1px solid red;
+.calendar_xr_date_tbody>span>span:hover{
+    border: 1px solid yellow;
+}
+/*数字居中！*/
+.calendar_xr_date_tbody>span>span>span{
+    display: block;
+    margin: auto;
+}
+.calendar_xr_date_tbody_date{
+
 }
 .calendar_xr_date_tbody_date.pdate{
     color: #ded2d2;
@@ -155,12 +161,10 @@
     opacity:0.3;
 }
 
-
-
 /*选中后的样式*/
 .calendar_xr_date_tbody_date.selected{
     box-sizing: border-box;
-    border:1px solid yellow;
+    border:1px solid red;
 }
 /*主题*/
 .calendar_xr[data-theme="blue"] {

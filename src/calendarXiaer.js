@@ -11,8 +11,9 @@
     }
     /*
     *   function 日历类
-    *   @param [element]  element 传入的input元素
-    *   @wrap  [element]  wrap    日历的包含块
+    *   @param  [element]   element 日历的input元素
+    *   @param  [element]   wrap    日历的包含块元素
+    *   @param  [object]    options     传入用户参数
     * */
     var Daclendar=function (element,wrap,options) {
         this.elem=$(element);
@@ -37,7 +38,7 @@
         try{
             //绑定事件,直接使用container为私有变量
             var that=this;
-            //事件应该绑在不会被删除的对象上，即container
+            //事件委托
             this.container.on("click",".calendar_xr_panel",function (event) {
                 //this指向对应的元素，如果为插件this为jq对象
                 if($(event.target).hasClass("calendar_xr_panel_left")){
@@ -50,12 +51,14 @@
             }).on("click",".calendar_xr_date_tbody",function (event) {
                 that.clickBY(event,that.selectedResponse);
             }).on("click",".calendar_xr_wrapper",function () {
-                that.container.hide();//单击日历范围之外隐藏日历
+                that.container.hide();//单击遮罩隐藏日历
+                that.viewSelected(that.selected);//意外退出时更新日历
+                //debugger;
             }).on("click",function (event) {
                 event.stopPropagation();//UI内部的click事件不再冒泡至上层
             })
         }catch(e) {
-
+            console.log(e.message);
         }finally {
             this.current=new Date(this.selected);
         }
@@ -71,16 +74,23 @@
         /*
         *   日期有效性检查
         * */
-        checkDate:function () {
-            ;
+        checkDate:function (date) {
+            var d=new Date(date);
+            if(this.rangeMin && this.rangeMin>d){
+                return false;
+            }
+            if(this.rangeMax && this.rangeMax<d){
+                return false;
+            }
+            return true;
         },
         /*
         *   格式化输出，被selectedResponse调用
         * */
         formatDate:function (date) {
-            var d=this.format,
+            var f=this.format,//字面常量
                 tmp;
-            d=d.replace(/\w+/g,function (value) {
+            f=f.replace(/\w+/g,function (value) {
                 switch (value){
                     case "yyyy":
                         tmp=date.getFullYear();
@@ -93,10 +103,10 @@
                         return tmp.length===2?tmp:"0"+tmp;
                 }
             });
-            return d;
+            return f;
         },
         /*
-        *   构造基础截面
+        *   构造基础界面
         * */
         //append的参数可以为数组！
         create:function () {
@@ -127,7 +137,7 @@
             var calendar_date_tbody=$("<div>").addClass("calendar_xr_date_tbody");
             calendar_date.append(calendar_date_tbody);
 
-            //主题
+            //主题，通过标签属性设置主题！
             calendar.attr("data-theme", this.theme);
 
             this.container=calendar;
@@ -145,7 +155,7 @@
         *   @return tbody
         * */
         createDays:function (date) {
-            //是否为选中日期的那一年月！
+            //是否为选中日期同年月！
             var flag=false;
             if(this.selected && this.selected.getFullYear()===date.getFullYear() && this.selected.getMonth()===date.getMonth()){
                 flag=true;
@@ -175,24 +185,24 @@
                 beg=lastDays-7+1;
             }
             for(;beg<=lastDays;++beg){
-                sp.append($("<span>"+beg+"</span>").addClass("calendar_xr_date_tbody_date pdate"));
+                sp.append($("<span><span>"+beg+"</span></span>").addClass("calendar_xr_date_tbody_date pdate"));
             }
 
             //当前日历，和下一个月
             var i,j;beg=1;
             for(i=0;i<6;++i){
                 sp=(i===0)?sp:$("<span>");
-                j=(i===0)?(sp.find("span").length):0;
+                j=(i===0)?(sp.children("span").length):0;
                 for(;j<7;++j){
                     if(beg<=currentDays){
                         //添加selected类
                         if(flag && date.getDate()===beg){
-                            sp.append($("<span>"+beg+"</span>").addClass("calendar_xr_date_tbody_date cdate selected"));
+                            sp.append($("<span><span>"+beg+"</span></span>").addClass("calendar_xr_date_tbody_date cdate selected"));
                         }else{
-                            sp.append($("<span>"+beg+"</span>").addClass("calendar_xr_date_tbody_date cdate"));
+                            sp.append($("<span><span>"+beg+"</span></span>").addClass("calendar_xr_date_tbody_date cdate"));
                         }
                     }else{
-                        sp.append($("<span>"+(beg-currentDays)+"</span>").addClass("calendar_xr_date_tbody_date ndate"));
+                        sp.append($("<span><span>"+(beg-currentDays)+"</span></span>").addClass("calendar_xr_date_tbody_date ndate"));
                     }
                     beg+=1;
                 }
@@ -202,8 +212,8 @@
         },
         /*
         *   创建月份文档片段
-        *   @param Date
-        *   @return tbody
+        *   @param  [Date]   Date
+        *   @return [element]   tbody
         * */
         createMonth:function (date) {
             var showDate=new Date(date);
@@ -215,16 +225,16 @@
             for(i=0;i<3;++i){
                 var tr=$("<span>");
                 for(j=0;j<4;++j){
-                    tr.append($("<span>"+months[(i*4+j)]+"</span>"));
+                    tr.append($("<span><span>"+months[(i*4+j)]+"</span></span>").addClass("calendar_xr_date_tbody_date"));
                 }
                 tbody.append(tr);
             }
-            return tbody;
+            return tbody.css("height","100%");
         },
         /*
         *   创建年份文档片段
-        *   @param Date
-        *   @return tbody
+        *   @param  [Date] date
+        *   @return [element] tbody
         * */
         createYear:function (date) {
             var showDate=new Date(date);
@@ -238,22 +248,18 @@
             for(i=0;i<3;++i){
                 var tr=$("<span>");
                 for(j=0;j<4;++j){
-                    tr.append($("<span>"+(beg++)+"</span>"));
+                    tr.append($("<span><span>"+(beg++)+"</span></span>").addClass("calendar_xr_date_tbody_date"));
                 }
                 tbody.append(tr);
             }
-            return tbody;
-
-
+            return tbody.css("height","100%");
         },
         /*
         *   tbody部分响应单击事件
         * */
         clickBY:function (event,callback) {
+
             //对单击元素进行判断
-            if($(event.target).children().length!==0){
-                return;
-            }
             if(this.modeView==="year"){
                 var year=parseInt($(event.target).text());
                 this.current.setFullYear(year);
@@ -294,14 +300,14 @@
 
             if(changeMode && changeMode===true){
                 if(this.modeView==="day"){
-                    thead.css("display","none");
                     var body=this.createMonth(this.current);
+                    thead.css("display","none");
                     this.minAndMax(body,tbody,"min");
                     caption.text(this.current.getFullYear()+"年"+(this.current.getMonth()+1)+"月");
                     this.modeView="month";
                 }else if(this.modeView==="month"){
-                    thead.css("display","none");
                     var body=this.createYear(this.current);
+                    thead.css("display","none");
                     this.minAndMax(body,tbody,"min");
                     caption.text(this.current.getFullYear()+"年");
                     this.modeView="year";
@@ -336,7 +342,7 @@
             //在调用此函数的时候通过call绑定了作用环境
             var d=this.formatDate(date);
             //jq的event对象才可以通过jq触发！
-            var e=$.Event("dataChanged",{date:d});
+            var e=$.Event("dateChanged",{date:d});
             this.elem.trigger(e);
         },
         /*
@@ -367,7 +373,7 @@
                     thead.css("display","flex");//显示星期天》星期六
                     break;
                 case "day":
-                    tbody.replaceWith(this.createDays(this.current,true));
+                    tbody.replaceWith(this.createDays(showDate,true));
                     caption.text(showDate.getFullYear()+"年"+(showDate.getMonth()+1)+"月");
                     card_day.text(showDate.getDate());
                     card_month.text(showDate.getMonth()+1);
@@ -377,6 +383,9 @@
         },
         /*
         *   左右移动动画效果
+        *   param   [element] body  替换tbody的新元素
+        *   param   [element]   tbody   被替换的旧元素
+        *   param   [boolean]   dir     缩小还是放大！
         * */
         leftAndright:function (body,tbody,dir) {
             var bodyWrap=tbody.parent(),
@@ -392,6 +401,9 @@
         },
         /*
         *   缩放动画效果
+        *   param   [element] body  被替换的元素
+        *   param   [element]   tbody   替换body的新元素
+        *   param   [boolean]   dir     缩小还是放大！
         * */
         minAndMax:function (body,tbody,dir) {
             var that=this;
@@ -423,7 +435,8 @@
             if(!$this.data(DCAL)){
                 $this.data(DCAL,(new Daclendar(this,$this.next(),options)));
             }
-            $this.on("dataChanged",function (event) {
+            //监听dateVhange事件
+            $this.on("dateChanged",function (event) {
                 $(this).val(event.date);
                 $(this).data(DCAL).hide();
             }).on("click",function (event) {
